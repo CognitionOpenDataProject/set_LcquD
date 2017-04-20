@@ -78,7 +78,7 @@ d4 <- d4 %>%
 ### Pre-processing
 
 ```{r}
-# initiation time
+# data frame for initiation time
 IT <- d1 %>%
   select(SubNum, contains("IT")) %>%
   mutate(SubNum = as.factor(SubNum)) %>%
@@ -86,7 +86,7 @@ IT <- d1 %>%
   mutate(prev_trial_type = substr(trial_type, 4, 4),
          curr_trial_type = substr(trial_type, 5, 5))
 
-# reach curvature
+# data frame for reach curvature
 RC <- d1 %>%
   select(SubNum, contains("CURV")) %>%
   mutate(SubNum = as.factor(SubNum)) %>%
@@ -97,44 +97,96 @@ RC <- d1 %>%
 
 ### Descriptive statistics
 
+
+> As predicted, initiation times conformed to the pattern of effects proposed to underlie the response threshold adjustment process (cC < iC < cI < iI; see Fig. 2A).
+
 ```{r}
-# initiation time
+# means for initiation time
 IT %>%
   group_by(prev_trial_type, curr_trial_type) %>%
-  summarize(se = sd(mean)/sqrt(length(mean)),
-            mean = mean(mean)
-            )
+  summarize(se = 1000*(sd(mean)/sqrt(length(mean))),
+            initiation_time_mean = 1000*mean(mean)
+            ) %>%
+  mutate(trial_type = paste(prev_trial_type, curr_trial_type, sep="")) %>%
+ggplot(aes(x=prev_trial_type, y=initiation_time_mean, group=curr_trial_type, color=curr_trial_type)) +
+  geom_line() +
+  ylim(420, 520) +
+    geom_errorbar(aes(ymin=initiation_time_mean-se,ymax=initiation_time_mean+se,width=.1)) +
+  geom_text(aes(label=trial_type),hjust=2, vjust=2) +
+  guides(color=FALSE) +
+  xlab("Previous Trial Type") +
+  ylab("Initiation Time (ms)") +
+  theme_bw()
+```
 
-# reach curvature
+![Figure 2A from the original article.](figureA.png)
+
+> Consistent with our second prediction, reach curvatures conformed to the pattern of effects previously linked to the monitoring component of cognitive control in the Stroop task (cC = iC < iI < cI; see Fig. 2B). 
+
+```{r}
+# means for reach curvature
 RC %>%
   group_by(prev_trial_type, curr_trial_type) %>%
   summarize(se = sd(mean)/sqrt(length(mean)),
-            mean = mean(mean)
-            )
+            reach_curvature_mean = mean(mean)
+            ) %>%
+  mutate(trial_type = paste(prev_trial_type, curr_trial_type, sep="")) %>%
+ggplot(aes(x=prev_trial_type, y=reach_curvature_mean, group=curr_trial_type, color=curr_trial_type)) +
+  geom_line() +
+  ylim(0.10, 0.25) +
+    geom_errorbar(aes(ymin=reach_curvature_mean-se,ymax=reach_curvature_mean+se,width=.1)) +
+  geom_text(aes(label=trial_type),hjust=2, vjust=2) +
+  guides(color=FALSE) +
+  xlab("Previous Trial Type") +
+  ylab("Curvature (ratio)") +
+  theme_bw()  
 ```
+
+
+![Figure 2B from the original article.](figureB.png)
+
+
 
 ### Inferential statistics
 
+> Initiation times revealed a main effect of current trial congruency, with higher initiation times on incongruent relative to congruent trials, F(1, 23) = 18.95, p < 0.001, ηp2 = 0.45, and a significant main effect of previous trial congruency, F(1, 23) = 5.95, p = 0.023, ηp2 = 0.21, with higher initiation times on trials preceded by an incongruent relative to a congruent trial. No interaction between current and previous trial congruency was observed, F(1, 23) = 0.183, p = 0.67.
+
 ```{r}
-# initiation time
+# anova for initiation time
 fit <- aov(mean ~ curr_trial_type * prev_trial_type + Error(SubNum/(curr_trial_type * prev_trial_type)), data=IT)
 summary(fit)
+```
 
-# reach curvature
+> Reach curvatures revealed a main effect of current trial congruency, with larger reach curvatures on incongruent relative to congruent trials, F(1, 23) = 19.05, p < 0.001, ηp2 = 0.45. A significant main effect of previous trial congruency was also observed, F(1, 23) = 5.33, p = 0.03, ηp2 = 0.19, with larger curvatures on trials preceded by a congruent relative to an incongruent trial. Further, a significant interaction between previous and current trial congruency was observed, F(1, 23) = 6.98, p = 0.015, ηp2 = 0.23. 
+
+```{r}
+# anova for reach curvature
 fit <- aov(mean ~ curr_trial_type * prev_trial_type + Error(SubNum/(curr_trial_type * prev_trial_type)), data=RC)
 summary(fit)
+```
 
-# comparing iI vs. cI trials
+> Follow-up tests revealed larger reach curvatures on cI than iI trials, F(1, 23) = 8.48, p = 0.008, ηp2 = 0.27. 
+
+```{r}
+# anova comparing iI vs. cI trials
 fit <- aov(mean ~ prev_trial_type + Error(SubNum/prev_trial_type), 
            data=filter(RC, curr_trial_type == "I"))
 summary(fit)
+```
 
-# comparing iC vs. cC trials
+> No effect of previous trial type was found on congruent trials, F(1, 23) = 0.009, p = 0.92. 
+
+```{r}
+# anova comparing iC vs. cC trials
 fit <- aov(mean ~ prev_trial_type + Error(SubNum/prev_trial_type), 
            data=filter(RC, curr_trial_type == "C"))
 summary(fit)
+```
 
-# comparing iC vs. iI trials
+> Further, reach curvatures were significantly larger on iI than iC trials, F(1, 23) = 5.60, p = 0.027, ηp2 = 0.20.
+
+```{r}
+# anova comparing iC vs. iI trials
 fit <- aov(mean ~ curr_trial_type + Error(SubNum/curr_trial_type), 
            data=filter(RC, prev_trial_type == "i"))
 summary(fit)
