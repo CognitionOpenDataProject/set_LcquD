@@ -93,32 +93,6 @@ RC <- d1 %>%
   gather(trial_type, mean, CURV.cC_mean:CURV.iI_mean) %>%
   mutate(prev_trial_type = substr(trial_type, 6, 6),
          curr_trial_type = substr(trial_type, 7, 7))
-
-# error rate
-# ER <- d3 %>%
-#   select(SubNum, contains("Error")) %>%
-#   mutate(SubNum = as.factor(SubNum)) %>%
-#   gather(trial_type, mean, ErrorRate.cC:ErrorRate.iI) %>%
-#   mutate(prev_trial_type = substr(trial_type, 11, 11),
-#          curr_trial_type = substr(trial_type, 12, 12))
-#   
-
-# movement time
-# MT <- d1 %>%
-#   select(SubNum, contains("MT")) %>%
-#   mutate(SubNum = as.factor(SubNum)) %>%
-#   gather(trial_type, mean, MT.cC_mean:MT.iI_mean) %>%
-#   mutate(prev_trial_type = substr(trial_type, 4, 4),
-#          curr_trial_type = substr(trial_type, 5, 5))
-  
-# total time
-# TT <- d1 %>%
-#   select(SubNum, contains("TT")) %>%
-#   mutate(SubNum = as.factor(SubNum)) %>%
-#   gather(trial_type, mean, TT.cC_mean:TT.iI_mean) %>%
-#   mutate(prev_trial_type = substr(trial_type, 4, 4),
-#          curr_trial_type = substr(trial_type, 5, 5))
-
 ```
 
 ### Descriptive statistics
@@ -150,30 +124,20 @@ summary(fit)
 fit <- aov(mean ~ curr_trial_type * prev_trial_type + Error(SubNum/(curr_trial_type * prev_trial_type)), data=RC)
 summary(fit)
 
+# comparing iI vs. cI trials
 fit <- aov(mean ~ prev_trial_type + Error(SubNum/prev_trial_type), 
            data=filter(RC, curr_trial_type == "I"))
 summary(fit)
 
+# comparing iC vs. cC trials
 fit <- aov(mean ~ prev_trial_type + Error(SubNum/prev_trial_type), 
            data=filter(RC, curr_trial_type == "C"))
 summary(fit)
 
+# comparing iC vs. iI trials
 fit <- aov(mean ~ curr_trial_type + Error(SubNum/curr_trial_type), 
            data=filter(RC, prev_trial_type == "i"))
 summary(fit)
-
-# # error rate
-# fit <- aov(mean ~ curr_trial_type * prev_trial_type + Error(SubNum/(curr_trial_type * prev_trial_type)), data=ER)
-# summary(fit)
-# 
-# # movement time
-# fit <- aov(mean ~ curr_trial_type * prev_trial_type + Error(SubNum/(curr_trial_type * prev_trial_type)), data=MT)
-# summary(fit)
-# 
-# # total time
-# fit <- aov(mean ~ curr_trial_type * prev_trial_type + Error(SubNum/(curr_trial_type * prev_trial_type)), data=TT)
-# summary(fit)
-
 ```
 
 INSUFFICIENT INFORMATION ERROR

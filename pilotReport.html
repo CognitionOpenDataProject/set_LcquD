@@ -307,32 +307,7 @@ RC &lt;- d1 %&gt;%
   mutate(SubNum = as.factor(SubNum)) %&gt;%
   gather(trial_type, mean, CURV.cC_mean:CURV.iI_mean) %&gt;%
   mutate(prev_trial_type = substr(trial_type, 6, 6),
-         curr_trial_type = substr(trial_type, 7, 7))
-
-# error rate
-# ER &lt;- d3 %&gt;%
-#   select(SubNum, contains(&quot;Error&quot;)) %&gt;%
-#   mutate(SubNum = as.factor(SubNum)) %&gt;%
-#   gather(trial_type, mean, ErrorRate.cC:ErrorRate.iI) %&gt;%
-#   mutate(prev_trial_type = substr(trial_type, 11, 11),
-#          curr_trial_type = substr(trial_type, 12, 12))
-#   
-
-# movement time
-# MT &lt;- d1 %&gt;%
-#   select(SubNum, contains(&quot;MT&quot;)) %&gt;%
-#   mutate(SubNum = as.factor(SubNum)) %&gt;%
-#   gather(trial_type, mean, MT.cC_mean:MT.iI_mean) %&gt;%
-#   mutate(prev_trial_type = substr(trial_type, 4, 4),
-#          curr_trial_type = substr(trial_type, 5, 5))
-  
-# total time
-# TT &lt;- d1 %&gt;%
-#   select(SubNum, contains(&quot;TT&quot;)) %&gt;%
-#   mutate(SubNum = as.factor(SubNum)) %&gt;%
-#   gather(trial_type, mean, TT.cC_mean:TT.iI_mean) %&gt;%
-#   mutate(prev_trial_type = substr(trial_type, 4, 4),
-#          curr_trial_type = substr(trial_type, 5, 5))</code></pre>
+         curr_trial_type = substr(trial_type, 7, 7))</code></pre>
 </div>
 <div id="descriptive-statistics" class="section level3">
 <h3>Descriptive statistics</h3>
@@ -423,7 +398,8 @@ summary(fit)</code></pre>
 ## Residuals                       23 0.030151 0.001311                 
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-<pre class="r"><code>fit &lt;- aov(mean ~ prev_trial_type + Error(SubNum/prev_trial_type), 
+<pre class="r"><code># comparing iI vs. cI trials
+fit &lt;- aov(mean ~ prev_trial_type + Error(SubNum/prev_trial_type), 
            data=filter(RC, curr_trial_type == &quot;I&quot;))
 summary(fit)</code></pre>
 <pre><code>## 
@@ -437,7 +413,8 @@ summary(fit)</code></pre>
 ## Residuals       23 0.04768 0.002073                   
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-<pre class="r"><code>fit &lt;- aov(mean ~ prev_trial_type + Error(SubNum/prev_trial_type), 
+<pre class="r"><code># comparing iC vs. cC trials
+fit &lt;- aov(mean ~ prev_trial_type + Error(SubNum/prev_trial_type), 
            data=filter(RC, curr_trial_type == &quot;C&quot;))
 summary(fit)</code></pre>
 <pre><code>## 
@@ -449,7 +426,8 @@ summary(fit)</code></pre>
 ##                 Df   Sum Sq   Mean Sq F value Pr(&gt;F)
 ## prev_trial_type  1 0.000007 0.0000075   0.009  0.925
 ## Residuals       23 0.018893 0.0008214</code></pre>
-<pre class="r"><code>fit &lt;- aov(mean ~ curr_trial_type + Error(SubNum/curr_trial_type), 
+<pre class="r"><code># comparing iC vs. iI trials
+fit &lt;- aov(mean ~ curr_trial_type + Error(SubNum/curr_trial_type), 
            data=filter(RC, prev_trial_type == &quot;i&quot;))
 summary(fit)</code></pre>
 <pre><code>## 
@@ -463,17 +441,6 @@ summary(fit)</code></pre>
 ## Residuals       23 0.03782 0.001644                 
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-<pre class="r"><code># # error rate
-# fit &lt;- aov(mean ~ curr_trial_type * prev_trial_type + Error(SubNum/(curr_trial_type * prev_trial_type)), data=ER)
-# summary(fit)
-# 
-# # movement time
-# fit &lt;- aov(mean ~ curr_trial_type * prev_trial_type + Error(SubNum/(curr_trial_type * prev_trial_type)), data=MT)
-# summary(fit)
-# 
-# # total time
-# fit &lt;- aov(mean ~ curr_trial_type * prev_trial_type + Error(SubNum/(curr_trial_type * prev_trial_type)), data=TT)
-# summary(fit)</code></pre>
 <p>INSUFFICIENT INFORMATION ERROR</p>
 <p>The authors did not provide raw data (and instead provided averaged data for each participant and condition used in SPSS), and thus it was impossible to confirm the following:</p>
 <blockquote>
