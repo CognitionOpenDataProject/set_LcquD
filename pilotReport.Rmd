@@ -8,7 +8,6 @@ output:
 
 #### Article ID: LcquD
 #### Pilot: Erica Yoon
-#### Co-pilot: Tom Hardwicke  
 #### Start date: 4/18/2017
 #### End date: 4/19/2017  
 
