@@ -230,8 +230,8 @@ div.tocify {
 <div id="start-date-4182017" class="section level4">
 <h4>Start date: 4/18/2017</h4>
 </div>
-<div id="end-date" class="section level4">
-<h4>End date:</h4>
+<div id="end-date-7132017" class="section level4">
+<h4>End date: 7/13/2017</h4>
 <hr />
 </div>
 <div id="methods-summary" class="section level4">
@@ -474,18 +474,13 @@ summary(fit)</code></pre>
 ## Residuals       23 0.03782 0.001644                 
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-<p>INSUFFICIENT INFORMATION ERROR</p>
-<p>The authors did not provide raw data (and instead provided averaged data for each participant and condition used in SPSS), and thus it was impossible to confirm the following:</p>
-<blockquote>
-<p>Removing errors and trials preceded by an error resulted in the additional exclusion of 7.0% of the remaining valid trials (SD = 5.7%) per participant on average.</p>
-</blockquote>
 </div>
 </div>
 <div id="step-5-conclusion" class="section level2">
 <h2>Step 5: Conclusion</h2>
 <pre class="r"><code>codReport(Report_Type = 'joint',
           Article_ID = 'LcquD', 
-          Insufficient_Information_Errors = 1,
+          Insufficient_Information_Errors = 0,
           Decision_Errors = 0, 
           Major_Numerical_Errors = 0, 
           Minor_Numerical_Errors = 0,
@@ -502,15 +497,15 @@ summary(fit)</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">1</td>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="right">0</td>
-<td align="left">Failure</td>
+<td align="right">0</td>
+<td align="left">Success</td>
 </tr>
 </tbody>
 </table>
-<p>There were no major or minor numerical errors. However, there was one insufficient information error due to the unavailibility of raw data.</p>
+<p>No errors were found. This reproducibility check was a success.</p>
 <pre class="r"><code>devtools::session_info()</code></pre>
 <pre><code>##  setting  value                       
 ##  version  R version 3.3.2 (2016-10-31)
